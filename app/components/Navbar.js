@@ -89,19 +89,19 @@ const Navbar = () => {
             {/* Logo */}
             {/* changed div tag to link tag so user can redirect to home page whenever they click on navbar logo */}
             <Link href="/" className="flex items-center">
-              <Image src="/logo.jpg" alt="NeoNest" width={60} height={60} />
-              <span className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent ml-2">NeoNest</span>
+              <Image src="/logo.jpg" alt="NeoNest" width={40} height={40} className="w-[40px] h-[40px] md:w-[44px] md:h-[44px] xl:w-[60px] xl:h-[60px]" />
+              <span className="text-lg md:text-xl xl:text-2xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent ml-2">NeoNest</span>
             </Link>
 
             {/* Hamburger - Mobile */}
-            <div className="md:hidden">
+            <div className="md:flex lg:hidden">
               <button onClick={() => setMenuOpen(!menuOpen)} className="text-pink-600 focus:outline-none">
                 {menuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
 
             {/* Nav - Desktop */}
-            <nav className="hidden md:flex items-center gap-4">
+            <nav className="hidden lg:flex items-center gap-2.5 lg:gap-3 xl:gap-4 text-sm lg:text-[15px] xl:text-base">
               {tabs.map(({ label, path }) => (
                 <Link key={label} href={path} className={`transition-colors capitalize ${pathname === path ? "text-pink-600" : "text-gray-600 hover:text-pink-600"}`}>
                   {label}
@@ -110,7 +110,7 @@ const Navbar = () => {
             </nav>
 
             {/* CTA - Desktop */}
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden lg:flex items-center space-x-1 lg:space-x-1.5 xl:space-x-2">
               <Chatbot />
               {!isAuth ? (
                 <>
@@ -131,7 +131,8 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {menuOpen && (
-            <div className="md:hidden mt-4 space-y-3">
+            <div className="md:flex lg:hidden mt-4 flex-col gap-4">
+              {/* Nav Links */}
               <div className="flex flex-col gap-3">
                 {tabs.map(({ label, path }) => (
                   <Link
@@ -143,24 +144,34 @@ const Navbar = () => {
                   </Link>
                 ))}
               </div>
+
+              {/* CTA Buttons */}
               <div className="mt-3 flex flex-col gap-2">
                 {!isAuth ? (
                   <>
-                    <Button asChild className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
+                    <Button asChild className="text-sm py-2 px-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
                       <Link href="/Login" onClick={() => setMenuOpen(false)}>
                         Login
                       </Link>
                     </Button>
-                    <Button asChild className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
+                    <Button asChild className="text-sm py-2 px-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
                       <Link href="/Signup" onClick={() => setMenuOpen(false)}>
                         Signup
                       </Link>
                     </Button>
+                    <div className="px-3">
+                      <Chatbot />
+                    </div>
                   </>
                 ) : (
-                  <Button onClick={handleLogout} className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
-                    Logout
-                  </Button>
+                  <>
+                    <Button onClick={handleLogout} className="text-sm py-2 px-3 bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white">
+                      Logout
+                    </Button>
+                    <div className="px-3">
+                      <Chatbot />
+                    </div>
+                  </>
                 )}
               </div>
             </div>
