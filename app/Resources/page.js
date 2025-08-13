@@ -6,6 +6,8 @@ import { Button } from "../components/ui/Button";
 import Badge from "../components/ui/Badge";
 import Input from "../components/ui/Input";
 import { BookOpen, ExternalLink, Search, Filter, Clock } from "lucide-react";
+import * as Select from "@radix-ui/react-select";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 const articles = [
   {
@@ -151,42 +153,67 @@ export default function Resources() {
           />
         </div>
 
-        {/* Filters */}
+        {/* Filters Container */}
         <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-auto">
-          {/* Category Filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Filter className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-600">Category:</span>
-            </div>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 hover:border-pink-400 hover:shadow-md transition duration-150 ease-in-out w-full sm:w-auto">
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Changed md:flex-col -> md:flex-row so filters are side-by-side */}
+          <div className="flex flex-row md:flex-row gap-2 w-full md:w-auto">
+            {/* Category Filter */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Filter className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-600">Category:</span>
+              </div>
+              <Select.Root value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select.Trigger
+                  className="flex justify-between items-center rounded-xl border border-gray-300 px-3 py-2 text-sm w-full sm:w-auto 
+            focus:ring-2 focus:ring-pink-500 focus:border-pink-500 
+            hover:border-pink-400 hover:shadow-md transition duration-150 ease-in-out">
+                  <Select.Value placeholder="Select category" />
+                  <Select.Icon>
+                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                  </Select.Icon>
+                </Select.Trigger>
 
-          {/* Format Filter */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Filter className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-600">Format:</span>
+                <Select.Content className="bg-white border z-50 border-gray-200 rounded-lg shadow-lg overflow-hidden w-full sm:w-auto" position="popper">
+                  <Select.Viewport className="p-1">
+                    {categories.map((cat) => (
+                      <Select.Item key={cat.id} value={cat.id} className="px-3 py-2 text-sm rounded-md hover:bg-pink-100 cursor-pointer focus:outline-none">
+                        <Select.ItemText>{cat.name}</Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Root>
             </div>
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value)}
-              className="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 hover:border-pink-400 hover:shadow-md transition duration-150 ease-in-out w-full sm:w-auto">
-              {formatCategories.map((format) => (
-                <option key={format.id} value={format.id}>
-                  {format.name}
-                </option>
-              ))}
-            </select>
+
+            {/* Format Filter */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <Filter className="w-4 h-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-600">Format:</span>
+              </div>
+              <Select.Root value={selectedType} onValueChange={setSelectedType}>
+                <Select.Trigger
+                  className="flex justify-between items-center rounded-xl border border-gray-300 px-3 py-2 text-sm w-full sm:w-auto 
+            focus:ring-2 focus:ring-pink-500 focus:border-pink-500 
+            hover:border-pink-400 hover:shadow-md transition duration-150 ease-in-out">
+                  <Select.Value placeholder="Select format" />
+                  <Select.Icon>
+                    <ChevronDown className="w-4 h-4 text-gray-500" />
+                  </Select.Icon>
+                </Select.Trigger>
+
+                <Select.Content className="bg-white z-50 border border-gray-200 rounded-lg shadow-lg overflow-hidden w-full sm:w-auto" position="popper">
+                  <Select.Viewport className="p-1">
+                    {formatCategories.map((format) => (
+                      <Select.Item key={format.id} value={format.id} className="px-3 py-2 text-sm rounded-md hover:bg-pink-100 cursor-pointer focus:outline-none">
+                        <Select.ItemText>{format.name}</Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
+              </Select.Root>
+            </div>
           </div>
         </div>
       </div>
