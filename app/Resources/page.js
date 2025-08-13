@@ -96,9 +96,22 @@ const categories = [
   { id: "health", name: "Health & Safety" },
 ];
 
+const formatCategories = [
+  { id: "all", name: "All Formats" },
+  { id: "article", name: "Article" },
+  { id: "video", name: "Video" },
+  { id: "audio", name: "Audio" },
+  { id: "podcast", name: "Podcast" },
+  { id: "journal", name: "Journals" },
+];
+
+//auto-cyclic colors for the tags in the article
+const colorClasses = ["bg-orange-100 text-orange-600", "bg-purple-100 text-purple-600", "bg-teal-100 text-teal-600", "bg-green-100 text-green-600"];
+
 export default function Resources() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedType, setSelectedType] = useState("all");
 
   useEffect(() => {
     document.title = "Resources | NeoNest";
@@ -113,7 +126,9 @@ export default function Resources() {
 
     const matchesCategory = selectedCategory === "all" || article.category === selectedCategory;
 
-    return matchesSearch && matchesCategory;
+    const matchesType = selectedType === "all" || article.type === selectedType;
+
+    return matchesSearch && matchesCategory && matchesType;
   });
 
   return (
@@ -123,50 +138,60 @@ export default function Resources() {
         <p className="text-lg text-gray-600">Curated articles to support your parenting journey</p>
       </div>
 
-      {/* Search + Filter Section with Divider */}
-      <div className="flex flex-col md:flex-row justify-between items-stretch gap-4 w-full">
-        {/* Search Bar (Left) */}
-        <div className="flex-1 flex items-center justify-center relative">
-          <div className="relative w-full max-w-2xl">
-            <Search className="absolute left-3 inset-y-0 flex items-center h-full text-gray-400 w-4" />
-            <Input
-              placeholder="Search articles..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 py-2 rounded-xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 w-full"
-            />
-          </div>
+      {/* Search + Filters Section */}
+      <div className="flex flex-col md:flex-row items-center justify-center gap-4 w-full">
+        {/* Search Bar */}
+        <div className="relative flex-1 max-w-lg w-full">
+          <Search className="absolute left-3 inset-y-0 flex items-center h-full text-gray-400 w-4" />
+          <Input
+            placeholder="Search articles..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 rounded-xl border border-gray-200 shadow-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 w-full h-10"
+          />
         </div>
 
-        {/* Vertical Divider */}
-        <div className="hidden md:flex items-center justify-center px-2">
-          <div className="w-px h-full bg-[linear-gradient(to_bottom,rgba(255,182,193,0.3),rgba(221,160,221,0.3))] hidden sm:block"></div>
-        </div>
-
-        {/* Filter Section (Right) */}
-        <div className="flex-1 md:max-w-2xl bg-[linear-gradient(to_right,rgba(255,182,193,0.3),rgba(221,160,221,0.3))] backdrop-blur-md border border-pink-200/60 rounded-2xl p-4 shadow-md flex flex-wrap items-center justify-start gap-4">
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-600">Category:</span>
+        {/* Filters */}
+        <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full md:w-auto">
+          {/* Category Filter */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Filter className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-600">Category:</span>
+            </div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 hover:border-pink-400 hover:shadow-md transition duration-150 ease-in-out w-full sm:w-auto">
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.id}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
           </div>
-          {categories.map((category) => (
-            <Button
-              key={category.id}
-              variant="outline"
-              onClick={() => setSelectedCategory(category.id)}
-              size="sm"
-              className={`rounded-xl text-sm ${
-                selectedCategory === category.id
-                  ? "bg-white text-pink-700 font-semibold border-pink-300 border-2 hover:bg-white hover:text-pink-400"
-                  : "text-gray-600 border-gray-200 font-normal hover:bg-white"
-              }`}>
-              {category.name}
-            </Button>
-          ))}
+
+          {/* Format Filter */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full md:w-auto">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
+              <Filter className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-600">Format:</span>
+            </div>
+            <select
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="rounded-xl border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-pink-500 focus:border-pink-500 hover:border-pink-400 hover:shadow-md transition duration-150 ease-in-out w-full sm:w-auto">
+              {formatCategories.map((format) => (
+                <option key={format.id} value={format.id}>
+                  {format.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Horizontal dividing line (below Search + Filter section) */}
+      {/* Horizontal dividing line */}
       <div className="w-full h-px bg-gradient-to-r from-pink-300 via-purple-300 to-pink-300 animate-pulse mt-1"></div>
 
       {/* Articles Grid */}
@@ -183,14 +208,12 @@ export default function Resources() {
             )}
 
             <CardHeader className="p-4 pb-2">
-              <div className="flex items-center justify-between"></div>
               <CardTitle className="text-lg mt-2 text-gray-800 transition-colors duration-200 group-hover:text-pink-600">{article.title}</CardTitle>
             </CardHeader>
 
             <CardContent className="px-4 pb-6 pt-0 flex flex-col flex-grow justify-between">
               <div>
                 <p className="text-gray-600 text-sm mb-4">{article.description}</p>
-
                 <div className="space-y-1 mb-4 text-sm text-gray-500">
                   <div className="text-gray-600">By {article.author}</div>
                   <div className="flex items-center gap-3 text-gray-500">
@@ -201,10 +224,9 @@ export default function Resources() {
                     <div>{new Date(article.publishDate).toLocaleDateString("en-GB")}</div>
                   </div>
                 </div>
-
                 <div className="flex flex-wrap gap-2 mb-4">
                   {article.tags.map((tag, index) => (
-                    <Badge key={index} variant="secondary" className="text-xs px-2 py-1 rounded-full bg-pink-100 text-pink-600">
+                    <Badge key={index} variant="secondary" className={`text-xs px-2 py-1 rounded-full ${colorClasses[index % colorClasses.length]}`}>
                       {tag}
                     </Badge>
                   ))}
@@ -213,7 +235,7 @@ export default function Resources() {
 
               {/* CTA Button */}
               <Button
-                className="w-full bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 hover:from-pink-600 hover:to-purple-600 hover:text-white font-medium rounded-xl transition-all duration-200 cursor-pointer"
+                className="w-full bg-pink-50 text-pink-600 hover:bg-pink-600 hover:text-white font-medium rounded-xl transition-all duration-200"
                 variant="ghost"
                 onClick={() => window.open(article.url, "_blank")}>
                 <ExternalLink className="w-4 h-4 mr-2" />
@@ -232,6 +254,7 @@ export default function Resources() {
             onClick={() => {
               setSearchTerm("");
               setSelectedCategory("all");
+              setSelectedType("all");
             }}
             className="rounded-xl text-pink-600 border-pink-300 hover:bg-pink-50 hover:text-pink-700">
             Clear Filters
